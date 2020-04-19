@@ -3,6 +3,7 @@ class response_handler():
         self.gcardbtnlist = []
         self.cardbtnlist = []
         self.gsuglist = []
+        self.gmedialist = []
     def genericResponse(self,text):
         self.ftext = text
     def genericCard(self,title,subtitle):
@@ -31,6 +32,9 @@ class response_handler():
         except:
             self.gsuglist = []
             self.gsuglist.append({"title":text})
+    def googleAssistantMediaResponse(self,mediaURL,description,imgURL,imgDesc,displayName,speech):
+        self.mediajson = ({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
+        self.mediatts = ({"simpleResponse":{"textToSpeech":speech}})
     def formResponse(self):
         import warnings
         ijson = []
@@ -65,6 +69,11 @@ class response_handler():
                 ijson.append(i)
         except:
             pass
+        try:
+            ijson.append(self.mediatts)
+            ijson.append(self.mediajson)
+        except:
+            pass
         if ijson != []:
             try:
                 self.fulfiljson["payload"].update({"google":{"expectUserResponse": True,"richResponse":{"items":ijson}}})
@@ -74,6 +83,5 @@ class response_handler():
             try:
                 self.fulfiljson["payload"].update({"google":{"expectUserResponse": True,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}})
             except:
-                warnings.warn("No Rich Response items found. This can lead to an error in Google Assistant")
                 self.fulfiljson["payload"] = {"google":{"expectUserResponse": True,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}}
         return self.fulfiljson
