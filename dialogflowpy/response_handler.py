@@ -2,6 +2,7 @@ class response_handler():
     def __init__(self):
         self.gcardbtnlist = []
         self.cardbtnlist = []
+        self.gsuglist = []
     def genericResponse(self,text):
         self.ftext = text
     def genericCard(self,title,subtitle):
@@ -24,12 +25,20 @@ class response_handler():
             self.carousellist[1]["carouselBrowse"]["items"].append({"title":title,"openUrlAction": {"url":url},"description":description,"footer":footer,"image":{"url":imgurl,"accessibilityText":imgalt}})
         except:
             raise AttributeError("googleAssistantNewCarousel is not created")
+    def googleAssistantNewSuggestion(self,text):
+        try:
+            self.gsuglist.append({"title":text})
+        except:
+            self.gsuglist = []
+            self.gsuglist.append({"title":text})
     def formResponse(self):
+        import warnings
         ijson = []
         try:
             self.fulfiljson = {"fulfillmentText":self.ftext}
         except:
-            raise AttributeError("genericResponse is required")
+            self.fulfiljson = {}
+            warnings.warn("genericResponse is not set. Your agent might not work on all platforms")
         try:
             ijson.append({"simpleResponse":{"textToSpeech":self.gcardspeech}})
             if self.gcardbtnlist == []:
@@ -48,6 +57,10 @@ class response_handler():
         except:
             pass
         try:
+            self.fulfiljson["outputContexts"] = self.contexts
+        except:
+            pass
+        try:
             for i in self.carousellist:
                 ijson.append(i)
         except:
@@ -57,4 +70,10 @@ class response_handler():
                 self.fulfiljson["payload"].update({"google":{"expectUserResponse": True,"richResponse":{"items":ijson}}})
             except:
                 self.fulfiljson["payload"] = {"google":{"expectUserResponse": True,"richResponse":{"items":ijson}}}
+        if self.gsuglist != []:
+            try:
+                self.fulfiljson["payload"].update({"google":{"expectUserResponse": True,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}})
+            except:
+                warnings.warn("No Rich Response items found. This can lead to an error in Google Assistant")
+                self.fulfiljson["payload"] = {"google":{"expectUserResponse": True,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}}
         return self.fulfiljson
