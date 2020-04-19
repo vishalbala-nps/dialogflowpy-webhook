@@ -32,6 +32,22 @@ class response_handler():
         except:
             self.gsuglist = []
             self.gsuglist.append({"title":text})
+    def googleAssistantNewTable(self,speech):
+        self.gtablejson = {"tableCard": {"rows":[],"columnProperties": []}}
+        self.gtablespeech = speech
+    def googleAssistantTableAddHeader(self,headerName):
+        try:
+            self.gtablejson["tableCard"]["columnProperties"].append({"header":headerName})
+        except:
+            raise AttributeError("googleAssistantNewTable is not created")
+    def googleAssistantTableAddCell(self,cellList,addDivider):
+        try:
+            tablelist = []
+            for i in cellList:
+                tablelist.append({"text":i})
+            self.gtablejson["tableCard"]["rows"].append({"cells":tablelist,"dividerAfter":addDivider})
+        except:
+            raise AttributeError("googleAssistantNewTable is not created")
     def googleAssistantMediaResponse(self,mediaURL,description,imgURL,imgDesc,displayName,speech):
         self.mediajson = ({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
         self.mediatts = ({"simpleResponse":{"textToSpeech":speech}})
@@ -67,6 +83,11 @@ class response_handler():
         try:
             for i in self.carousellist:
                 ijson.append(i)
+        except:
+            pass
+        try:
+            ijson.append({"simpleResponse":{"textToSpeech":self.gtablespeech}})
+            ijson.append(self.gtablejson)
         except:
             pass
         try:
