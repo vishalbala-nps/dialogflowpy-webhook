@@ -11,6 +11,9 @@ class response_handler():
         self.cardsubtitle = subtitle
     def generic_card_new_button(self,btntitle,btnlink):
         self.cardbtnlist.append({"text":btntitle,"postback":btnlink})
+    def google_assistant_speech(self,speech, **kwargs):
+        self.gstts = speech
+        self.gsdisplay = kwargs.get("displayText", "")
     def google_assistant_card(self,title,subtitle,speech):
         self.gcardtitle = title
         self.gcardftext = subtitle
@@ -54,19 +57,12 @@ class response_handler():
     def form_response(self):
         import warnings
         ijson = []
+        #Generic Reponses
         try:
             self.fulfiljson = {"fulfillmentText":self.ftext}
         except:
             self.fulfiljson = {}
             warnings.warn("genericResponse is not set. Your agent might not work on all platforms")
-        try:
-            ijson.append({"simpleResponse":{"textToSpeech":self.gcardspeech}})
-            if self.gcardbtnlist == []:
-                ijson.append({"basicCard":{"title":self.gcardtitle,"formatted_text":self.gcardftext}})
-            else:
-                ijson.append({"basicCard":{"title":self.gcardtitle,"formatted_text":self.gcardftext,"buttons":self.gcardbtnlist}})
-        except:
-            pass
         try:
             if self.cardbtnlist != []:
                 self.cardjson = {"title":self.cardtitle,"subtitle":self.cardsubtitle,"buttons":self.cardbtnlist}
@@ -76,8 +72,20 @@ class response_handler():
             self.fulfiljson["fulfillmentMessages"].append({"card":self.cardjson})
         except:
             pass
+        #Google Assistant Responses
         try:
-            self.fulfiljson["outputContexts"] = self.contexts
+            if self.gsdisplay != "":
+                ijson.append({"simpleResponse": {"textToSpeech":self.gstts,"displayText":self.gsdisplay}})
+            else:
+                ijson.append({"simpleResponse": {"textToSpeech":self.gstts}})
+        except:
+            pass
+        try:
+            ijson.append({"simpleResponse":{"textToSpeech":self.gcardspeech}})
+            if self.gcardbtnlist == []:
+                ijson.append({"basicCard":{"title":self.gcardtitle,"formatted_text":self.gcardftext}})
+            else:
+                ijson.append({"basicCard":{"title":self.gcardtitle,"formatted_text":self.gcardftext,"buttons":self.gcardbtnlist}})
         except:
             pass
         try:
