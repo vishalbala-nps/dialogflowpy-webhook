@@ -55,6 +55,8 @@ class response_handler():
     def google_assistant_media_response(self,mediaURL,description,imgURL,imgDesc,displayName,speech):
         self.mediajson = ({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
         self.mediatts = ({"simpleResponse":{"textToSpeech":speech}})
+    def google_assistant_ask_permisson(self,speech,permissions):
+        self.gpermissionjson = {"intent":"actions.intent.PERMISSION","data":{"@type":"type.googleapis.com/google.actions.v2.PermissionValueSpec","optContext":speech,"permissions":permissions}}
     def form_response(self):
         import warnings
         ijson = []
@@ -121,4 +123,14 @@ class response_handler():
                 self.fulfiljson["payload"].update({"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}})
             except:
                 self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}}
+        try:
+            if ijson != []:
+                self.fulfiljson["payload"]["google"]["systemIntent"] = self.gpermissionjson
+            else:
+                try:
+                    self.fulfiljson["payload"].update({"google":{"expectUserResponse": expectres,"systemIntent":self.gpermissionjson}}) 
+                except:
+                    self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"systemIntent":self.gpermissionjson}}
+        except:
+            pass
         return self.fulfiljson
