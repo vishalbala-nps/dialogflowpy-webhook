@@ -14,6 +14,7 @@ class response_handler():
     def google_assistant_speech(self,speech, **kwargs):
         self.gstts = speech
         self.gsdisplay = kwargs.get("displayText", "")
+        self.gendcon = kwargs.get("endConversation",False)
     def google_assistant_card(self,title,subtitle,speech):
         self.gcardtitle = title
         self.gcardftext = subtitle
@@ -57,6 +58,13 @@ class response_handler():
     def form_response(self):
         import warnings
         ijson = []
+        try:
+            if self.gendcon == False:
+                expectres = True
+            else:
+                expectres = False
+        except:
+            expectres = False
         #Generic Reponses
         try:
             self.fulfiljson = {"fulfillmentText":self.ftext}
@@ -105,12 +113,12 @@ class response_handler():
             pass
         if ijson != []:
             try:
-                self.fulfiljson["payload"].update({"google":{"expectUserResponse": True,"richResponse":{"items":ijson}}})
+                self.fulfiljson["payload"].update({"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson}}})
             except:
-                self.fulfiljson["payload"] = {"google":{"expectUserResponse": True,"richResponse":{"items":ijson}}}
+                self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson}}}
         if self.gsuglist != []:
             try:
-                self.fulfiljson["payload"].update({"google":{"expectUserResponse": True,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}})
+                self.fulfiljson["payload"].update({"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}})
             except:
-                self.fulfiljson["payload"] = {"google":{"expectUserResponse": True,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}}
+                self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}}
         return self.fulfiljson
