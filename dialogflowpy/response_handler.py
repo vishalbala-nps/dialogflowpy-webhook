@@ -4,22 +4,22 @@ class response_handler():
         self.cardbtnlist = []
         self.gsuglist = []
         self.gmedialist = []
-    def generic_response(self,text):
-        self.ftext = text
+    def generic_response(self,speech):
+        self.ftext = speech
     def generic_card(self,title,subtitle):
         self.cardtitle = title
         self.cardsubtitle = subtitle
     def generic_card_new_button(self,btntitle,btnlink):
         self.cardbtnlist.append({"text":btntitle,"postback":btnlink})
-    def google_assistant_card(self,title,subtitle,text):
+    def google_assistant_card(self,title,subtitle,speech):
         self.gcardtitle = title
         self.gcardftext = subtitle
-        self.gcardspeech = text
+        self.gcardspeech = speech
     def google_assistant_card_new_button(self,btntitle,btnlink):
         self.gcardbtnlist.append({"title":btntitle,"openUrlAction":{"url":btnlink}})
-    def google_assistant_new_carousel(self,text):
+    def google_assistant_new_carousel(self,speech):
         self.carousellist = []
-        self.carousellist.append({"simpleResponse":{"textToSpeech":text}})
+        self.carousellist.append({"simpleResponse":{"textToSpeech":speech}})
         self.carousellist.append({"carouselBrowse":{"items":[]}})
     def google_assistant_carousel_new_item(self,title,url,description,footer,imgurl,imgalt):
         try:
