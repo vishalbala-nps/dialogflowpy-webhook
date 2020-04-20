@@ -4,43 +4,43 @@ class response_handler():
         self.cardbtnlist = []
         self.gsuglist = []
         self.gmedialist = []
-    def genericResponse(self,text):
+    def generic_response(self,text):
         self.ftext = text
-    def genericCard(self,title,subtitle):
+    def generic_card(self,title,subtitle):
         self.cardtitle = title
         self.cardsubtitle = subtitle
-    def genericCardNewButton(self,btntitle,btnlink):
+    def generic_card_new_button(self,btntitle,btnlink):
         self.cardbtnlist.append({"text":btntitle,"postback":btnlink})
-    def googleAssistantCard(self,title,subtitle,text):
+    def google_assistant_card(self,title,subtitle,text):
         self.gcardtitle = title
         self.gcardftext = subtitle
         self.gcardspeech = text
-    def googleAssistantCardNewButton(self,btntitle,btnlink):
+    def google_assistant_card_new_button(self,btntitle,btnlink):
         self.gcardbtnlist.append({"title":btntitle,"openUrlAction":{"url":btnlink}})
-    def googleAssistantNewCarousel(self,text):
+    def google_assistant_new_carousel(self,text):
         self.carousellist = []
         self.carousellist.append({"simpleResponse":{"textToSpeech":text}})
         self.carousellist.append({"carouselBrowse":{"items":[]}})
-    def googleAssistantCarouselNewItem(self,title,url,description,footer,imgurl,imgalt):
+    def google_assistant_carousel_new_item(self,title,url,description,footer,imgurl,imgalt):
         try:
             self.carousellist[1]["carouselBrowse"]["items"].append({"title":title,"openUrlAction": {"url":url},"description":description,"footer":footer,"image":{"url":imgurl,"accessibilityText":imgalt}})
         except:
             raise AttributeError("googleAssistantNewCarousel is not created")
-    def googleAssistantNewSuggestion(self,text):
+    def google_assistant_new_suggestion(self,text):
         try:
             self.gsuglist.append({"title":text})
         except:
             self.gsuglist = []
             self.gsuglist.append({"title":text})
-    def googleAssistantNewTable(self,speech):
+    def google_assistant_new_table(self,speech):
         self.gtablejson = {"tableCard": {"rows":[],"columnProperties": []}}
         self.gtablespeech = speech
-    def googleAssistantTableAddHeader(self,headerName):
+    def google_assistant_table_add_header(self,headerName):
         try:
             self.gtablejson["tableCard"]["columnProperties"].append({"header":headerName})
         except:
             raise AttributeError("googleAssistantNewTable is not created")
-    def googleAssistantTableAddCell(self,cellList,addDivider):
+    def google_assistant_table_add_cell(self,cellList,addDivider):
         try:
             tablelist = []
             for i in cellList:
@@ -48,10 +48,10 @@ class response_handler():
             self.gtablejson["tableCard"]["rows"].append({"cells":tablelist,"dividerAfter":addDivider})
         except:
             raise AttributeError("googleAssistantNewTable is not created")
-    def googleAssistantMediaResponse(self,mediaURL,description,imgURL,imgDesc,displayName,speech):
+    def google_assistant_media_response(self,mediaURL,description,imgURL,imgDesc,displayName,speech):
         self.mediajson = ({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
         self.mediatts = ({"simpleResponse":{"textToSpeech":speech}})
-    def formResponse(self):
+    def form_response(self):
         import warnings
         ijson = []
         try:
