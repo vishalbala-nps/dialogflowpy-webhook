@@ -6,17 +6,23 @@ class response_handler():
         self.gcarouselindex = 0
         self.gtableindex = 0
         self.gpermission = False
+        self.fulfiltextavail = False
+        self.gencard = False
+        self.eventtrigger = False
     #Event Triggers
     def trigger_event(self,event,params,langcode="en-US"):
         self.trigeventname = event
         self.trigeventparams = params
         self.triglangcode = langcode
+        self.eventtrigger = True
     #Generic Responses
     def generic_response(self,speech):
         self.ftext = speech
+        self.fulfiltextavail = True
     def generic_card(self,title,subtitle):
         self.cardtitle = title
         self.cardsubtitle = subtitle
+        self.gencard = True
     def generic_card_new_button(self,btntitle,btnlink):
         self.cardbtnlist.append({"text":btntitle,"postback":btnlink})
     #Google Assistant Responses
@@ -81,25 +87,21 @@ class response_handler():
         except:
             expectres = True
         #Event Trigger
-        try:
+        if self.eventtrigger:
             self.fulfiljson = {"followupEventInput":{"name":self.trigeventname,"parameters":self.trigeventparams,"languageCode":self.triglangcode}}
             return self.fulfiljson
-        except:
-            pass
         #Generic Reponses
-        try:
+        if self.fulfiltextavail:
             self.fulfiljson = {"fulfillmentText":self.ftext}
-        except:
+        else:
             self.fulfiljson = {}
-        try:
+        if self.gencard:
             if self.cardbtnlist != []:
                 self.cardjson = {"title":self.cardtitle,"subtitle":self.cardsubtitle,"buttons":self.cardbtnlist}
             else:
                 self.cardjson = {"title":self.cardtitle,"subtitle":self.cardsubtitle}
             self.fulfiljson["fulfillmentMessages"] = []
             self.fulfiljson["fulfillmentMessages"].append({"card":self.cardjson})
-        except:
-            pass
         #Google Assistant Responses
         if self.googleijson != []:
             self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":self.googleijson}}}
