@@ -3,11 +3,12 @@ class response_handler():
         self.cardbtnlist = []
         self.gsuglist = []
         self.googleijson = []
+        self.genericmessages = []
+        self.gencardindex = 0
         self.gcarouselindex = 0
         self.gtableindex = 0
         self.gpermissionavail = False
         self.fulfiltextavail = False
-        self.gencardavail = False
         self.eventavail = False
     #Event Triggers
     def trigger_event(self,event,params,langcode="en-US"):
@@ -20,11 +21,18 @@ class response_handler():
         self.ftext = speech
         self.fulfiltextavail = True
     def generic_card(self,title,subtitle):
-        self.cardtitle = title
-        self.cardsubtitle = subtitle
-        self.gencardavail = True
+        self.genericmessages.append({"card":{"title":title,"subtitle":subtitle}})
+        self.gencardindex = self.genericmessages.index({"card":{"title":title,"subtitle":subtitle}})
     def generic_card_add_button(self,btntitle,btnlink):
-        self.cardbtnlist.append({"text":btntitle,"postback":btnlink})
+        try:
+            self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
+        except:
+            self.genericmessages[self.gencardindex]["card"]["buttons"] = []
+            self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
+    def generic_quick_reply(self,title,replies):
+        self.genericmessages.append({"quick_replies":{"title":title,"replies":replies}})
+    def generic_image(self,imgURL,imgalt):
+        self.genericmessages.append({"image":{"image_uri":imgURL,"accessibility_text":imgalt}})
     #Google Assistant Responses
     def google_assistant_speech(self,speech, **kwargs):
         gstts = speech
@@ -87,7 +95,7 @@ class response_handler():
         except:
             expectres = True
         #Event Trigger
-        if self.eventavail1:
+        if self.eventavail:
             self.fulfiljson = {"followupEventInput":{"name":self.trigeventname,"parameters":self.trigeventparams,"languageCode":self.triglangcode}}
             return self.fulfiljson
         #Generic Reponses
@@ -95,13 +103,9 @@ class response_handler():
             self.fulfiljson = {"fulfillmentText":self.ftext}
         else:
             self.fulfiljson = {}
-        if self.gencardavail:
-            if self.cardbtnlist != []:
-                self.cardjson = {"title":self.cardtitle,"subtitle":self.cardsubtitle,"buttons":self.cardbtnlist}
-            else:
-                self.cardjson = {"title":self.cardtitle,"subtitle":self.cardsubtitle}
+        if self.genericmessages != []:
             self.fulfiljson["fulfillmentMessages"] = []
-            self.fulfiljson["fulfillmentMessages"].append({"card":self.cardjson})
+            self.fulfiljson["fulfillmentMessages"].append(self.genericmessages)
         #Google Assistant Responses
         if self.googleijson != []:
             self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":self.googleijson}}}
