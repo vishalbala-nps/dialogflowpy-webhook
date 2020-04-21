@@ -42,4 +42,4 @@ After deploying to your cloud service, we need to configure in Dialogflow. Go to
 ### Testing
 After entering the webhook URL, click on Integrations (located in the sidebar) and click on Google Assistant and click on Test. This will take you to the Google Assistant emulator. Type "Talk to my Test App" and you should get "Hello from Python!" back
 ## Next Steps
-Now that you have created a basic App, you may want to look at the [Module Reference](/module_reference) for more features of this module
+Now that you have created a basic App, you may want to look at the [Module Reference](/module_reference) for more features of this module. 

@@ -4,6 +4,12 @@ class response_handler():
         self.cardbtnlist = []
         self.gsuglist = []
         self.gmedialist = []
+    #Event Triggers
+    def trigger_event(self,event,params,langcode="en-US"):
+        self.trigeventname = event
+        self.trigeventparams = params
+        self.triglangcode = langcode
+    #Generic Responses
     def generic_response(self,speech):
         self.ftext = speech
     def generic_card(self,title,subtitle):
@@ -11,6 +17,7 @@ class response_handler():
         self.cardsubtitle = subtitle
     def generic_card_new_button(self,btntitle,btnlink):
         self.cardbtnlist.append({"text":btntitle,"postback":btnlink})
+    #Google Assistant Responses
     def google_assistant_speech(self,speech, **kwargs):
         self.gstts = speech
         self.gsdisplay = kwargs.get("displayText", "")
@@ -67,6 +74,12 @@ class response_handler():
                 expectres = False
         except:
             expectres = False
+        #Event Trigger
+        try:
+            self.fulfiljson = {"followupEventInput":{"name":self.trigeventname,"parameters":self.trigeventparams,"languageCode":self.triglangcode}}
+            return self.fulfiljson
+        except:
+            pass
         #Generic Reponses
         try:
             self.fulfiljson = {"fulfillmentText":self.ftext}
