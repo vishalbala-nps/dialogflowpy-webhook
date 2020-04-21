@@ -1,9 +1,11 @@
 class response_handler():
     def __init__(self):
-        self.gcardbtnlist = []
         self.cardbtnlist = []
         self.gsuglist = []
-        self.gmedialist = []
+        self.googleijson = []
+        self.gcarouselindex = 0
+        self.gtableindex = 0
+        self.gpermission = False
     #Event Triggers
     def trigger_event(self,event,params,langcode="en-US"):
         self.trigeventname = event
@@ -19,61 +21,65 @@ class response_handler():
         self.cardbtnlist.append({"text":btntitle,"postback":btnlink})
     #Google Assistant Responses
     def google_assistant_speech(self,speech, **kwargs):
-        self.gstts = speech
-        self.gsdisplay = kwargs.get("displayText", "")
+        gstts = speech
+        gsdisplay = kwargs.get("displayText", "")
         self.gendcon = kwargs.get("endConversation",False)
-    def google_assistant_card(self,title,subtitle,speech):
-        self.gcardtitle = title
-        self.gcardftext = subtitle
-        self.gcardspeech = speech
-    def google_assistant_card_new_button(self,btntitle,btnlink):
-        self.gcardbtnlist.append({"title":btntitle,"openUrlAction":{"url":btnlink}})
-    def google_assistant_new_carousel(self,speech):
-        self.carousellist = []
-        self.carousellist.append({"simpleResponse":{"textToSpeech":speech}})
-        self.carousellist.append({"carouselBrowse":{"items":[]}})
+        if gsdisplay != "":
+            self.googleijson.append({"simpleResponse": {"textToSpeech":gstts,"displayText":gsdisplay}})
+        else:
+            self.googleijson.append({"simpleResponse": {"textToSpeech":gstts}})
+    def google_assistant_card(self,title,subtitle,**kwargs):
+        gcardtitle = title
+        gcardftext = subtitle
+        gcardbtn = kwargs.get("btnName","")
+        gcardurl = kwargs.get("btnLink","")
+        if gcardbtn == "":
+            self.googleijson.append({"basicCard":{"title":gcardtitle,"formatted_text":gcardftext}})
+        else:
+            self.googleijson.append({"basicCard":{"title":gcardtitle,"formatted_text":gcardftext,"buttons":[{"title":gcardbtn,"openUrlAction":{"url":gcardurl}}]}})
+    def google_assistant_new_carousel(self):
+        self.googleijson.append({"carouselBrowse":{"items":[]}})
+        self.gcarouselindex = self.googleijson.index({"carouselBrowse":{"items":[]}})
     def google_assistant_carousel_new_item(self,title,url,description,footer,imgurl,imgalt):
         try:
-            self.carousellist[1]["carouselBrowse"]["items"].append({"title":title,"openUrlAction": {"url":url},"description":description,"footer":footer,"image":{"url":imgurl,"accessibilityText":imgalt}})
+            self.googleijson[self.gcarouselindex]["carouselBrowse"]["items"].append({"title":title,"openUrlAction": {"url":url},"description":description,"footer":footer,"image":{"url":imgurl,"accessibilityText":imgalt}})
         except:
-            raise AttributeError("googleAssistantNewCarousel is not created")
+            raise AttributeError("google_assistant_new_carousel is not created")
     def google_assistant_new_suggestion(self,text):
         try:
             self.gsuglist.append({"title":text})
         except:
             self.gsuglist = []
             self.gsuglist.append({"title":text})
-    def google_assistant_new_table(self,speech):
-        self.gtablejson = {"tableCard": {"rows":[],"columnProperties": []}}
-        self.gtablespeech = speech
+    def google_assistant_new_table(self):
+        self.googleijson.append({"tableCard": {"rows":[],"columnProperties": []}})
+        self.gtableindex = self.googleijson.index(({"tableCard": {"rows":[],"columnProperties": []}}))
     def google_assistant_table_add_header(self,headerName):
         try:
-            self.gtablejson["tableCard"]["columnProperties"].append({"header":headerName})
+            self.googleijson[self.gtableindex]["tableCard"]["columnProperties"].append({"header":headerName})
         except:
-            raise AttributeError("googleAssistantNewTable is not created")
+            raise AttributeError("google_assistant_new_table is not created")
     def google_assistant_table_add_cell(self,cellList,addDivider):
         try:
             tablelist = []
             for i in cellList:
                 tablelist.append({"text":i})
-            self.gtablejson["tableCard"]["rows"].append({"cells":tablelist,"dividerAfter":addDivider})
+            self.googleijson[self.gtableindex]["tableCard"]["rows"].append({"cells":tablelist,"dividerAfter":addDivider})
         except:
-            raise AttributeError("googleAssistantNewTable is not created")
+            raise AttributeError("google_assistant_new_table is not created")
     def google_assistant_media_response(self,mediaURL,description,imgURL,imgDesc,displayName,speech):
-        self.mediajson = ({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
-        self.mediatts = ({"simpleResponse":{"textToSpeech":speech}})
+        self.googleijson.append({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
     def google_assistant_ask_permisson(self,speech,permissions):
         self.gpermissionjson = {"intent":"actions.intent.PERMISSION","data":{"@type":"type.googleapis.com/google.actions.v2.PermissionValueSpec","optContext":speech,"permissions":permissions}}
-    def form_response(self):
-        import warnings
-        ijson = []
+        self.gpermission = True
+    def create_final_response(self):
         try:
             if self.gendcon == False:
                 expectres = True
             else:
                 expectres = False
         except:
-            expectres = False
+            expectres = True
         #Event Trigger
         try:
             self.fulfiljson = {"followupEventInput":{"name":self.trigeventname,"parameters":self.trigeventparams,"languageCode":self.triglangcode}}
@@ -85,7 +91,6 @@ class response_handler():
             self.fulfiljson = {"fulfillmentText":self.ftext}
         except:
             self.fulfiljson = {}
-            warnings.warn("genericResponse is not set. Your agent might not work on all platforms")
         try:
             if self.cardbtnlist != []:
                 self.cardjson = {"title":self.cardtitle,"subtitle":self.cardsubtitle,"buttons":self.cardbtnlist}
@@ -96,54 +101,16 @@ class response_handler():
         except:
             pass
         #Google Assistant Responses
-        try:
-            if self.gsdisplay != "":
-                ijson.append({"simpleResponse": {"textToSpeech":self.gstts,"displayText":self.gsdisplay}})
-            else:
-                ijson.append({"simpleResponse": {"textToSpeech":self.gstts}})
-        except:
-            pass
-        try:
-            ijson.append({"simpleResponse":{"textToSpeech":self.gcardspeech}})
-            if self.gcardbtnlist == []:
-                ijson.append({"basicCard":{"title":self.gcardtitle,"formatted_text":self.gcardftext}})
-            else:
-                ijson.append({"basicCard":{"title":self.gcardtitle,"formatted_text":self.gcardftext,"buttons":self.gcardbtnlist}})
-        except:
-            pass
-        try:
-            for i in self.carousellist:
-                ijson.append(i)
-        except:
-            pass
-        try:
-            ijson.append({"simpleResponse":{"textToSpeech":self.gtablespeech}})
-            ijson.append(self.gtablejson)
-        except:
-            pass
-        try:
-            ijson.append(self.mediatts)
-            ijson.append(self.mediajson)
-        except:
-            pass
-        if ijson != []:
-            try:
-                self.fulfiljson["payload"].update({"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson}}})
-            except:
-                self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson}}}
+        if self.googleijson != []:
+            self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":self.googleijson}}}
         if self.gsuglist != []:
             try:
-                self.fulfiljson["payload"].update({"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}})
+                self.fulfiljson["payload"]["google"]["richResponse"]["suggestions"] = self.gsuglist
             except:
-                self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":ijson,"suggestions":self.gsuglist}}}
-        try:
-            if ijson != []:
+                raise AttributeError("You are trying to insert suggestions into a Google Assistant Rich Response with no items. This will lead to an error in Actions on Google")
+        if self.gpermission:
+            if self.googleijson != []:
                 self.fulfiljson["payload"]["google"]["systemIntent"] = self.gpermissionjson
             else:
-                try:
-                    self.fulfiljson["payload"].update({"google":{"expectUserResponse": expectres,"systemIntent":self.gpermissionjson}}) 
-                except:
-                    self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"systemIntent":self.gpermissionjson}}
-        except:
-            pass
+                self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"systemIntent":self.gpermissionjson}}
         return self.fulfiljson

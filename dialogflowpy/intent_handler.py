@@ -11,7 +11,7 @@ class intent_handler():
             return self.resjson["queryResult"]["intent"]["name"]
         except:
             raise TypeError("Malformed Request JSON: Failed to find Intent Name")
-    def get_intent_display_name(self):
+    def get_intent_displayName(self):
         try:
             return self.resjson["queryResult"]["intent"]["displayName"]
         except:
@@ -25,7 +25,7 @@ class intent_handler():
         try:
             return self.resjson["queryResult"]["parameters"][param]
         except:
-            raise KeyError("Parameter not found")
+            raise KeyError("Parameter "+param+" not found")
     def get_action(self):
         try:
             return self.resjson["queryResult"]["action"]
