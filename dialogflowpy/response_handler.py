@@ -5,16 +5,16 @@ class response_handler():
         self.googleijson = []
         self.gcarouselindex = 0
         self.gtableindex = 0
-        self.gpermission = False
+        self.gpermissionavail = False
         self.fulfiltextavail = False
-        self.gencard = False
-        self.eventtrigger = False
+        self.gencardavail = False
+        self.eventavail = False
     #Event Triggers
     def trigger_event(self,event,params,langcode="en-US"):
         self.trigeventname = event
         self.trigeventparams = params
         self.triglangcode = langcode
-        self.eventtrigger = True
+        self.eventavail = True
     #Generic Responses
     def generic_response(self,speech):
         self.ftext = speech
@@ -22,8 +22,8 @@ class response_handler():
     def generic_card(self,title,subtitle):
         self.cardtitle = title
         self.cardsubtitle = subtitle
-        self.gencard = True
-    def generic_card_new_button(self,btntitle,btnlink):
+        self.gencardavail = True
+    def generic_card_add_button(self,btntitle,btnlink):
         self.cardbtnlist.append({"text":btntitle,"postback":btnlink})
     #Google Assistant Responses
     def google_assistant_speech(self,speech, **kwargs):
@@ -77,7 +77,7 @@ class response_handler():
         self.googleijson.append({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
     def google_assistant_ask_permisson(self,speech,permissions):
         self.gpermissionjson = {"intent":"actions.intent.PERMISSION","data":{"@type":"type.googleapis.com/google.actions.v2.PermissionValueSpec","optContext":speech,"permissions":permissions}}
-        self.gpermission = True
+        self.gpermissionavail = True
     def create_final_response(self):
         try:
             if self.gendcon == False:
@@ -87,7 +87,7 @@ class response_handler():
         except:
             expectres = True
         #Event Trigger
-        if self.eventtrigger:
+        if self.eventavail1:
             self.fulfiljson = {"followupEventInput":{"name":self.trigeventname,"parameters":self.trigeventparams,"languageCode":self.triglangcode}}
             return self.fulfiljson
         #Generic Reponses
@@ -95,7 +95,7 @@ class response_handler():
             self.fulfiljson = {"fulfillmentText":self.ftext}
         else:
             self.fulfiljson = {}
-        if self.gencard:
+        if self.gencardavail:
             if self.cardbtnlist != []:
                 self.cardjson = {"title":self.cardtitle,"subtitle":self.cardsubtitle,"buttons":self.cardbtnlist}
             else:
@@ -110,7 +110,7 @@ class response_handler():
                 self.fulfiljson["payload"]["google"]["richResponse"]["suggestions"] = self.gsuglist
             except:
                 raise AttributeError("You are trying to insert suggestions into a Google Assistant Rich Response with no items. This will lead to an error in Actions on Google")
-        if self.gpermission:
+        if self.gpermissionavail:
             if self.googleijson != []:
                 self.fulfiljson["payload"]["google"]["systemIntent"] = self.gpermissionjson
             else:
