@@ -36,6 +36,16 @@ class intent_handler():
             return self.resjson["session"]
         except:
             raise TypeError("Malformed Request JSON: Failed to find Session ID")
+    def get_context_by_name(self,contextName):
+        fres = {}
+        for i in self.resjson["queryResult"]["outputContexts"]:
+            if i["name"].split("/")[len(i["name"].split("/"))-1] == contextName:
+                fres = i
+                break
+        if fres == {}:
+            raise LookupError("Context with name "+contextName+" not found!")
+        else:
+            return fres
     def get_capabilities(self):
         try:
             retjson = []
