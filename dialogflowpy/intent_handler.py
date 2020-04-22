@@ -31,6 +31,11 @@ class intent_handler():
             return self.resjson["queryResult"]["action"]
         except:
             return ""
+    def get_session_id(self):
+        try:
+            return self.resjson["session"]
+        except:
+            raise TypeError("Malformed Request JSON: Failed to find Session ID")
     def get_capabilities(self):
         try:
             retjson = []
@@ -49,4 +54,3 @@ class intent_handler():
             return self.resjson["originalDetectIntentRequest"]["source"]
         except:
             return ""
-    

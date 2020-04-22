@@ -4,18 +4,23 @@ class response_handler():
         self.gsuglist = []
         self.googleijson = []
         self.genericmessages = []
+        self.contextlist = []
         self.gencardindex = 0
         self.gcarouselindex = 0
         self.gtableindex = 0
         self.gpermissionavail = False
         self.fulfiltextavail = False
         self.eventavail = False
+        self.contextavail = False
     #Event Triggers
     def trigger_event(self,event,params,langcode="en-US"):
         self.trigeventname = event
         self.trigeventparams = params
         self.triglangcode = langcode
         self.eventavail = True
+    def add_context(self,sessionID,contextName,lifespan,params):
+        self.contextlist.append({"name":sessionID+"/contexts/"+contextName,"lifespanCount":lifespan,"parameters":params})
+        self.contextavail = True
     #Generic Responses
     def generic_response(self,speech):
         self.ftext = speech
@@ -106,6 +111,9 @@ class response_handler():
         if self.genericmessages != []:
             self.fulfiljson["fulfillmentMessages"] = []
             self.fulfiljson["fulfillmentMessages"].append(self.genericmessages)
+        #Contexts
+        if self.contextavail == True:
+            self.fulfiljson["outputContexts"] = self.contextlist
         #Google Assistant Responses
         if self.googleijson != []:
             self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":self.googleijson}}}
