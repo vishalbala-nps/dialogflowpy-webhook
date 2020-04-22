@@ -1,4 +1,4 @@
-class intent_handler():
+class request_handler():
     def __init__(self,dialogresjson):
         self.resjson = dialogresjson
     def get_intent(self):
