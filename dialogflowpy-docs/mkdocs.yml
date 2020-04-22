@@ -1,7 +1,0 @@
-site_name: dialogflowpy
-nav:
-    - Home: index.md
-    - Quickstart: quickstart.md
-    - Module Reference: module_reference.md
-theme: readthedocs
-

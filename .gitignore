@@ -4,3 +4,4 @@ env
 dist
 /*.egg-info
 __pycache__
+build
