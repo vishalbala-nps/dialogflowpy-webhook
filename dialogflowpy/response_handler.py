@@ -27,6 +27,8 @@ class response_handler():
         self.ftext = speech
         self.fulfiltextavail = True
     #Generic Rich Responses
+    def generic_rich_text_response(self,text):
+        self.genericmessages.append({"text":{"text":[text]}})
     def generic_card(self,title,**kwargs):
         imgurl = kwargs.get("imageURL","")
         subtitle = kwargs.get("subtitle","")
