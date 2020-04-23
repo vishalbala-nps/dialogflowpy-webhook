@@ -25,9 +25,15 @@ class response_handler():
     def generic_response(self,speech):
         self.ftext = speech
         self.fulfiltextavail = True
-    def generic_card(self,title,subtitle):
-        self.genericmessages.append({"card":{"title":title,"subtitle":subtitle}})
-        self.gencardindex = self.genericmessages.index({"card":{"title":title,"subtitle":subtitle}})
+    def generic_card(self,title,subtitle,**kwargs):
+        imgurl = kwargs.get("imageURL","")
+        fjson = {}
+        if imgurl == "":
+            fjson = {"card":{"title":title,"subtitle":subtitle}}
+        else:
+            fjson = {"card":{"title":title,"subtitle":subtitle,"imageUri":imgurl}}
+        self.genericmessages.append(fjson)
+        self.gencardindex = self.genericmessages.index(fjson)
     def generic_card_add_button(self,btntitle,btnlink):
         try:
             self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
@@ -52,10 +58,16 @@ class response_handler():
         gcardftext = subtitle
         gcardbtn = kwargs.get("btnName","")
         gcardurl = kwargs.get("btnLink","")
+        imgurl = kwargs.get("imageURL","")
+        imgalt = kwargs.get("imageAlt","")
+        toappend = {}
         if gcardbtn == "":
-            self.googleijson.append({"basicCard":{"title":gcardtitle,"formatted_text":gcardftext}})
+            toappend = {"basicCard":{"title":gcardtitle,"formatted_text":gcardftext}}
         else:
-            self.googleijson.append({"basicCard":{"title":gcardtitle,"formatted_text":gcardftext,"buttons":[{"title":gcardbtn,"openUrlAction":{"url":gcardurl}}]}})
+            toappend = {"basicCard":{"title":gcardtitle,"formatted_text":gcardftext,"buttons":[{"title":gcardbtn,"openUrlAction":{"url":gcardurl}}]}}
+        if imgurl != "":
+            toappend["basicCard"]["image"] = {"url":imgurl,"accessibilityText":imgalt}
+        self.googleijson.append(toappend)
     def google_assistant_new_carousel(self):
         self.googleijson.append({"carouselBrowse":{"items":[]}})
         self.gcarouselindex = self.googleijson.index({"carouselBrowse":{"items":[]}})
@@ -70,12 +82,31 @@ class response_handler():
         except:
             self.gsuglist = []
             self.gsuglist.append({"title":text})
-    def google_assistant_new_table(self):
-        self.googleijson.append({"tableCard": {"rows":[],"columnProperties": []}})
-        self.gtableindex = self.googleijson.index(({"tableCard": {"rows":[],"columnProperties": []}}))
-    def google_assistant_table_add_header(self,headerName):
+    def google_assistant_new_table(self,**kwargs):
+        imgurl = kwargs.get("imageURL","")
+        imgalt = kwargs.get("imageAlt","")
+        tabtitle = kwargs.get("title","")
+        tabsub = kwargs.get("subtitle","")
+        fjson = {}
+        fjson = {"tableCard": {"rows":[],"columnProperties": []}}
+        if imgurl != "":
+            fjson["tableCard"]["image"] = {"url":imgurl,"accessibilityText":imgalt}
+        if tabtitle != "":
+            fjson["tableCard"]["title"] = tabtitle
+        if tabsub != "":
+            fjson["tableCard"]["subtitle"] = tabsub
+        self.googleijson.append(fjson)
+        self.gtableindex = self.googleijson.index(fjson)
+    def google_assistant_table_add_header(self,headerName,**kwargs):
+        alignment = kwargs.get("horizontalAlignment","")
+        fjson = {}
         try:
-            self.googleijson[self.gtableindex]["tableCard"]["columnProperties"].append({"header":headerName})
+            if alignment != "":
+                fjson = {"header":headerName,"horizontalAlignment":alignment}
+            else:
+                fjson = {"header":headerName}
+            self.googleijson[self.gtableindex]["tableCard"]["columnProperties"].append(fjson)
+
         except:
             raise AttributeError("google_assistant_new_table is not created")
     def google_assistant_table_add_cell(self,cellList,addDivider):
@@ -109,8 +140,7 @@ class response_handler():
         else:
             self.fulfiljson = {}
         if self.genericmessages != []:
-            self.fulfiljson["fulfillmentMessages"] = []
-            self.fulfiljson["fulfillmentMessages"].append(self.genericmessages)
+            self.fulfiljson["fulfillmentMessages"] = self.genericmessages
         #Contexts
         if self.contextavail == True:
             self.fulfiljson["outputContexts"] = self.contextlist
