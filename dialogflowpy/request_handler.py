@@ -54,7 +54,7 @@ class request_handler():
             return retjson
         except:
             return []
-    def get_source_payload(self):
+    def get_payload(self):
         try:
             return self.resjson["originalDetectIntentRequest"]["payload"]
         except:
