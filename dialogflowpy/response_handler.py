@@ -45,9 +45,9 @@ class response_handler():
             self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
     def generic_add_suggestions(self,suggestionList,**kwargs):
         title = kwargs.get("title","")
-        self.genericmessages.append({"quick_replies":{"title":title,"replies":suggestionList}})
-    def generic_image(self,imgURL,imgalt):
-        self.genericmessages.append({"image":{"image_uri":imgURL,"accessibility_text":imgalt}})
+        self.genericmessages.append({"quick_replies":{"title":title,"quickReplies":suggestionList}})
+    def generic_image(self,imageURL,imgalt):
+        self.genericmessages.append({"image":{"image_uri":imageURL,"accessibility_text":imgalt}})
     #Google Assistant Rich Responses
     def google_assistant_response(self,speech, **kwargs):
         gstts = speech
@@ -79,9 +79,9 @@ class response_handler():
     def google_assistant_new_carousel(self):
         self.googleijson.append({"carouselBrowse":{"items":[]}})
         self.gcarouselindex = len(self.googleijson)-1
-    def google_assistant_carousel_add_item(self,title,url,imgurl,imgalt,description="",footer=""):
+    def google_assistant_carousel_add_item(self,title,url,imageURL,imgalt,description="",footer=""):
         try:
-            self.googleijson[self.gcarouselindex]["carouselBrowse"]["items"].append({"title":title,"openUrlAction": {"url":url},"description":description,"footer":footer,"image":{"url":imgurl,"accessibilityText":imgalt}})
+            self.googleijson[self.gcarouselindex]["carouselBrowse"]["items"].append({"title":title,"openUrlAction": {"url":url},"description":description,"footer":footer,"image":{"url":imageURL,"accessibilityText":imgalt}})
         except:
             raise AttributeError("google_assistant_new_carousel is not created")
     def google_assistant_add_suggestions(self,suggestionList):
@@ -117,7 +117,7 @@ class response_handler():
         except:
             raise AttributeError("google_assistant_new_table is not created")
     def google_assistant_media_response(self,mediaURL,description,displayName,**kwargs):
-        imgURL = kwargs.get("imgURL","")
+        imgURL = kwargs.get("imageURL","")
         imgDesc = kwargs.get("imgDesc","")
         self.googleijson.append({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
     def google_assistant_ask_permisson(self,speech,permissionList):
