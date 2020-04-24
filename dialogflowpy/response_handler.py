@@ -116,7 +116,7 @@ class response_handler():
         :param suggestionList: The List of Suggestions/Quick Replies
         :type suggestionList: list
         :param title: The title of the Suggestions
-        :type suggestionList: str
+        :type suggestionList: str, optional
         """
         title = kwargs.get("title","")
         self.genericmessages.append({"quick_replies":{"title":title,"quickReplies":suggestionList}})
@@ -132,6 +132,16 @@ class response_handler():
         self.genericmessages.append({"image":{"image_uri":imageURL,"accessibility_text":imgalt}})
     #Google Assistant Rich Responses
     def google_assistant_response(self,speech, **kwargs):
+        """
+        A Google Assistant speech to be said (and displayed) to the user
+
+        :param speech: The Text to be said to the user
+        :type speech: str
+        :param displayText: The text to be displayed in the chat bubble while telling the speech
+        :type displayText: str, optional
+        :param endConversation: Specifies wheather this response should end the conversation or not
+        :type endConversation: bool
+        """
         gstts = speech
         gsdisplay = kwargs.get("displayText", "")
         self.gendcon = kwargs.get("endConversation",False)
@@ -140,6 +150,33 @@ class response_handler():
         else:
             self.googleijson.append({"simpleResponse": {"textToSpeech":gstts}})
     def google_assistant_card(self,title,**kwargs):
+        """
+        A Google Assistant Card to be displayed to the user
+
+        :param title: The Title of the Card
+        :type title: str
+
+        :param subtitle: The subtitle of the Card
+        :type subtitle: str, optional
+
+        :param formatted_text: The text to be displayed along with the card
+        :type formatted_text: str, optional
+
+        :param btnName: The Name of the button to be displayed on the card
+        :type btnName: str, optional
+
+        :param btnLink: The link to redirect on button click
+        :type btnLink: str, optional
+
+        :param imageURL: The URL of the image to be displayed on the card
+        :type imageURL: str, optional
+
+        :param imageAlt: The Alt Text of the image to be displayed on the card
+        :type imageAlt: str, optional
+    
+        :param imageDisplayOption: The Display options for the image (`Click here For a list of image display options <https://developers.google.com/assistant/conversational/webhook/reference/rest/Shared.Types/ImageDisplayOptions>`_)
+        :type imageDisplayOption: str, optional
+        """
         gcardtitle = title
         gcardsub = kwargs.get("subtitle","")
         gcardftext = kwargs.get("formatted_text","")
@@ -159,17 +196,58 @@ class response_handler():
             toappend["basicCard"]["imageDisplayOptions"] = imgdisopt
         self.googleijson.append(toappend)
     def google_assistant_new_carousel(self):
+        """
+        Creates a New Google Assistant Carousel
+        """
         self.googleijson.append({"carouselBrowse":{"items":[]}})
         self.gcarouselindex = len(self.googleijson)-1
     def google_assistant_carousel_add_item(self,title,url,imageURL,imgalt,description="",footer=""):
+        """
+        Adds a new item to a Google Assistant Carousel
+
+        :param title: The title of the carousel item
+        :type title: str
+        :param url: The URL to redirect to when the Carousel item is clicked
+        :type url: str
+        :param imageURL: The URL of the image to be displayed on the caarousel item
+        :type imageURL: str
+        :param imgalt: The Alt text of the image to be displayed on the caarousel item
+        :type imgalt: str
+        :param description: The description to be displayed on the carousel item, defaults to ""
+        :type description: str, optional
+        :param footer: The footer to be displayed on the carousel item, defaults to ""
+        :type footer: str, optional
+        :raises AttributeError: This Error is raised if a new item is added before calling ``google_assistant_new_carousel``
+        """
         try:
             self.googleijson[self.gcarouselindex]["carouselBrowse"]["items"].append({"title":title,"openUrlAction": {"url":url},"description":description,"footer":footer,"image":{"url":imageURL,"accessibilityText":imgalt}})
         except:
             raise AttributeError("google_assistant_new_carousel is not created")
     def google_assistant_add_suggestions(self,suggestionList):
+        """
+        Adds Google Assistant Suggestion Chips to be displayed
+
+        :param suggestionList: The list containing the suggestions to be displayed
+        :type suggestionList: list
+        """
         for i in suggestionList:
             self.gsuglist.append({"title":i})
     def google_assistant_new_table(self,**kwargs):
+        """
+        Creates a new Google Assistant Table Card
+
+        :param title: The title of the Table Card
+        :type title: str, optional
+
+        :param subtitle: The subtitle of the Table Card
+        :type subtitle: str, optional
+
+        :param imageURL: The URL of the image to be displayed on the table card
+        :type imageURL: str, optional
+
+        :param imageAlt: The Alt text of the image to be displayed on the table card
+        :type imageAlt: str, optional
+        """
         imgurl = kwargs.get("imageURL","")
         imgalt = kwargs.get("imageAlt","")
         tabtitle = kwargs.get("title","")
@@ -185,12 +263,28 @@ class response_handler():
         self.googleijson.append(fjson)
         self.gtableindex = self.googleijson.index(fjson)
     def google_assistant_table_add_header_row(self,headerList):
+        """
+        Adds a Header row to a Google Assistant Table Card
+
+        :param headerList: The list containing the header rows to be added
+        :type headerList: list
+        :raises AttributeError: This Error is raised if a header row is added before calling ``google_assistant_new_table``
+        """
         try:
             for i in headerList:
                 self.googleijson[self.gtableindex]["tableCard"]["columnProperties"].append({"header":i})
         except:
             raise AttributeError("google_assistant_new_table is not created")
     def google_assistant_table_add_row(self,cellList,addDivider):
+        """
+        Adds a new row to a Google Assistant Table Card
+
+        :param cellList: The list containing the rows to be added
+        :type cellList: list
+        :param addDivider: Specifies if a divider should be added after the row
+        :type addDivider: bool
+        :raises AttributeError: This Error is raised if a header row is added before calling ``google_assistant_new_table``
+        """
         try:
             tablelist = []
             for i in cellList:
@@ -199,13 +293,42 @@ class response_handler():
         except:
             raise AttributeError("google_assistant_new_table is not created")
     def google_assistant_media_response(self,mediaURL,description,displayName,**kwargs):
+        """
+        Creates a Google Assistant Media Response to play music
+
+        :param mediaURL: The URL where the music is located
+        :type mediaURL: str
+        :param description: The description of the music
+        :type description: str
+        :param displayName: The name of the music to display
+        :type displayName: str
+        :param imageURL: The URL of the image to be displayed along with the media response
+        :type imageURL: str,optional
+        :param imgAlt: The Alt Text of the image to be displayed along with the media response
+        :type imgAlt: str,optional
+        """
         imgURL = kwargs.get("imageURL","")
-        imgDesc = kwargs.get("imgDesc","")
-        self.googleijson.append({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgDesc},"name":displayName}]}})
+        imgAlt = kwargs.get("imgAlt","")
+        self.googleijson.append({"mediaResponse":{"mediaType": "AUDIO","mediaObjects":[{"contentUrl":mediaURL,"description":description,"icon":{"url":imgURL,"accessibilityText":imgAlt},"name":displayName}]}})
     def google_assistant_ask_permisson(self,speech,permissionList):
+        """
+        Asks for permission from user in Google Assistant to get details like User's real name and address
+
+        :param speech: The reason for the Permisssion Request
+        :type speech: str
+        :param permissionList: The list of Permissions to get from the user 
+        :type permissionList: list
+        """
         self.gpermissionjson = {"intent":"actions.intent.PERMISSION","data":{"@type":"type.googleapis.com/google.actions.v2.PermissionValueSpec","optContext":speech,"permissions":permissionList}}
         self.gpermissionavail = True
     def create_final_response(self):
+        """
+        Creates the Final Response JSON to be sent back to Dialogflow
+
+        :raises AttributeError: This error is raised if you try to insert Google Assistant Suggestions to a Google Assistant Rich Response with no items
+        :return: The Response JSON
+        :rtype: Dictionary
+        """
         self.fulfiljson = {}
         try:
             if self.gendcon == False:
