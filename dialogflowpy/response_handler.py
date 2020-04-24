@@ -56,12 +56,36 @@ class response_handler():
         self.eventavail = True
     #Generic Responses
     def generic_response(self,speech):
+        """
+        A Generic Text to be displayed or told to the user.
+
+        .. note:: ``generic_response`` works on all platforms including Google Assistant. However, it is recommended to use ``google_assistant_response`` for Google Assistant and ``generic_rich_text_response`` for text responses on other platforms.
+
+        :param speech: The Text to be displayed or said to the user
+        :type speech: str
+        """
         self.ftext = speech
         self.fulfiltextavail = True
     #Generic Rich Responses
     def generic_rich_text_response(self,text):
+        """
+        A Generic Rich Text Response to display to the user. Unlike ``generic_response``, you can have multiple ``generic_rich_text_response``
+
+        :param text: The Text to be displayed to the user
+        :type text: str
+        """
         self.genericmessages.append({"text":{"text":[text]}})
     def generic_card(self,title,**kwargs):
+        """
+        A Generic Card to be displayed to the user
+
+        :param title: The Title of the Card
+        :type title: str
+        :param subtitle: The Subitle of the Card
+        :type subtitle: str, optional
+        :param imageURL: The Link of the Image to be displayed on the card
+        :type imageURL: str, optional
+        """
         imgurl = kwargs.get("imageURL","")
         subtitle = kwargs.get("subtitle","")
         fjson = {}
@@ -72,15 +96,39 @@ class response_handler():
         self.genericmessages.append(fjson)
         self.gencardindex = len(self.genericmessages)-1
     def generic_card_add_button(self,btntitle,btnlink):
+        """
+        Adds a button to a Generic Card. When clicked, directs to a website
+
+        :param btntitle: The button's title
+        :type btntitle: str
+        :param btnlink: The link to redirect to on click
+        :type btnlink: str
+        """
         try:
             self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
         except:
             self.genericmessages[self.gencardindex]["card"]["buttons"] = []
             self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
     def generic_add_suggestions(self,suggestionList,**kwargs):
+        """
+        Adds Suggestion Chips/Quick Replies to be displayed. 
+
+        :param suggestionList: The List of Suggestions/Quick Replies
+        :type suggestionList: list
+        :param title: The title of the Suggestions
+        :type suggestionList: str
+        """
         title = kwargs.get("title","")
         self.genericmessages.append({"quick_replies":{"title":title,"quickReplies":suggestionList}})
     def generic_image(self,imageURL,imgalt):
+        """
+        Sends an Image to the User
+
+        :param imageURL: The URL of the Image
+        :type imageURL: str
+        :param imgalt: The Alt Text for the Image
+        :type imgalt: str
+        """
         self.genericmessages.append({"image":{"image_uri":imageURL,"accessibility_text":imgalt}})
     #Google Assistant Rich Responses
     def google_assistant_response(self,speech, **kwargs):
