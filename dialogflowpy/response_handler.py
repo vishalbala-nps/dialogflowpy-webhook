@@ -1,4 +1,7 @@
 class response_handler():
+    """
+    The Class handles the creation of Dialogflow Responses
+    """
     def __init__(self):
         self.cardbtnlist = []
         self.gsuglist = []

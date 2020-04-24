@@ -8,9 +8,11 @@ class request_handler():
         self.resjson = dialogflowRequestJson
     def get_intent(self):
         """
-        Returns the Intent from which the Webhook was triggered
+        Returns the Intent JSON which triggered the Webhook
 
         :raises TypeError: This Error is Raised if the Intent JSON can't be retived if the Request JSON is Malformed
+        :return: Intent Object
+        :rtype: JSON
         """
         try:
             return self.resjson["queryResult"]["intent"]
@@ -18,9 +20,11 @@ class request_handler():
             raise TypeError("Malformed Request JSON: Failed to find Intent JSON")
     def get_intent_name(self):
         """
-        Returns the Intent Name from which the Webhook was triggered
+        Returns the Intent Name which triggered the Webhook
 
         :raises TypeError: This Error is Raised if the Intent Name can't be retived if the Request JSON is Malformed
+        :return: Intent Name
+        :rtype: str
         """
         try:
             return self.resjson["queryResult"]["intent"]["name"]
@@ -28,9 +32,11 @@ class request_handler():
             raise TypeError("Malformed Request JSON: Failed to find Intent Name")
     def get_intent_displayName(self):
         """
-        Returns the Intent Display Name (this is the Intent Name which you would have specified in Dialogflow) from which the Webhook was triggered
+        Returns the Intent Display Name (this is the Intent Name which you would have specified in Dialogflow) which triggered the Webhook
 
         :raises TypeError: This Error is Raised if the Intent Display Name can't be retived if the Request JSON is Malformed
+        :return: Intent Display Name
+        :rtype: str
         """
         try:
             return self.resjson["queryResult"]["intent"]["displayName"]
@@ -38,7 +44,10 @@ class request_handler():
             raise TypeError("Malformed Request JSON: Failed to find Intent Display Name")
     def get_parameters(self):
         """
-        Returns a Dictionary of filled Parameter Values
+        Returns a JSON of filled Parameter Values
+
+        :return: Parameter Object
+        :rtype: JSON
         """
         try:
             return self.resjson["queryResult"]["parameters"]
@@ -49,8 +58,9 @@ class request_handler():
         Returns a Parameter Value by Parameter Name
 
         :param param: The Parameter name to retrive the Value
-        :type param: str
         :raises KeyError: This Error is Rasied if the Parameter is not found
+        :return: Parameter Value
+        :rtype: str
         """
         try:
             return self.resjson["queryResult"]["parameters"][param]
@@ -66,9 +76,11 @@ class request_handler():
             return ""
     def get_session_id(self):
         """
-        Returns the Session ID from the Request JSON
+        Returns the Session ID of the Dialogflow Session
 
         :raises TypeError: This Error is Raised if the Session ID can't be retived if the Request JSON is Malformed
+        :return: Session ID
+        :rtype: str
         """
         try:
             return self.resjson["session"]
@@ -76,11 +88,13 @@ class request_handler():
             raise TypeError("Malformed Request JSON: Failed to find Session ID")
     def get_context_by_name(self,contextName):
         """
-        Returns a Context Dictionary by Context Name
+        Returns a Context JSON by Context Name
 
-        :param contextName: The Context Name to retrive the Context Dictionary
+        :param contextName: The Context Name to retrive the Context JSON
         :type contextName: str
         :raises LookupError: This Error is Raised if The Context is not found
+        :return: Context Object
+        :rtype: JSON
         """
         fres = {}
         for i in self.resjson["queryResult"]["outputContexts"]:
@@ -96,6 +110,9 @@ class request_handler():
         Returns a list Google Assistant Capabilities for a particular surface (eg. Smart Display, Mobile Phone, Chromebook etc.) from where the bot is accessed.
 
         .. note:: This Feature is specific only for Google Assistant. This will return an empty list if the bot is accessed from platforms which are not Google Assistant
+        
+        :return: Capabilities List
+        :rtype: list
         """
         try:
             retjson = []
@@ -107,6 +124,9 @@ class request_handler():
     def get_payload(self):
         """
         Returns the Platform Specific Payload from where the request originated
+
+        :return: Payload Object
+        :rtype: JSON
         """
         try:
             return self.resjson["originalDetectIntentRequest"]["payload"]
@@ -114,7 +134,10 @@ class request_handler():
             return {}
     def get_source(self):
         """
-        Returns the source from which the request originated
+        Returns the source where the request originated
+
+        :return: Source where the request originated
+        :rtype: str
         """
         try:
             return self.resjson["originalDetectIntentRequest"]["source"]
