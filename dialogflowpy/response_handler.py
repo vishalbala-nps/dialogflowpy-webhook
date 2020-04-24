@@ -1,8 +1,13 @@
 class response_handler():
     """
     The Class handles the creation of Dialogflow Responses
+
+    .. note:: There are 2 types of Rich Responses which can be created using this class. They are: Generic Rich Responses and Google Assistant Rich Responses. Generic Responses work on all platforms except Google Assistant. Functions that create generic responses start with 'generic'. For Google Assistant, you should use Google Assistant Rich Responses. These functions start with 'google_assistant'
     """
     def __init__(self):
+        """
+        Constructor
+        """
         self.cardbtnlist = []
         self.gsuglist = []
         self.googleijson = []
@@ -17,10 +22,34 @@ class response_handler():
         self.contextavail = False
     #Context
     def add_context(self,sessionID,contextName,lifespan=0,params={}):
+        """
+        Adds/Changes a Dialogflow Context
+
+        :param sessionID: The Session ID
+        :type sessionID: str
+        :param contextName: The name of the Context to add/edit
+        :type contextName: str
+        :param lifespan: The  number of conversational turns for which the context remains active, defaults to 0
+        :type lifespan: int, optional
+        :param params: The Dictionary of Data to store in the context, defaults to {}
+        :type params: dict, optional
+        """
         self.contextlist.append({"name":sessionID+"/contexts/"+contextName,"lifespanCount":lifespan,"parameters":params})
         self.contextavail = True
     #Event Triggers
     def trigger_event(self,event,params,langcode="en-US"):
+        """
+        Triggers a Dialogflow Event
+
+        .. note:: When the response contains event, other things are ignored (except Contexts)
+
+        :param event: The Name of the Event to Trigger
+        :type event: str
+        :param params: The Dictionary of Parameters
+        :type params: dict
+        :param langcode: The Language Code of the Agent, defaults to "en-US"
+        :type langcode: str, optional
+        """
         self.trigeventname = event
         self.trigeventparams = params
         self.triglangcode = langcode
