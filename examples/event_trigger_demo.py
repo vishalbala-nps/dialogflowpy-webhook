@@ -1,0 +1,21 @@
+"""
+This is a Simple Demo to demonstrate triggering intents by event name instead of using Utterances.
+Here, trigintent is triggered by an event (called intent_trigger) from intent2
+"""
+from flask import *
+import dialogflowpy_webhook
+app = Flask(__name__)
+
+app.route("/")
+def main():
+    intent_handler = dialogflowpy_webhook.request_handler(request.get_json())
+    response_handler = dialogflowpy_webhook.response_handler()
+
+    intent = intent_handler.get_intent_displayName()
+    if intent == "intent1":
+        response_handler.generic_response("You have triggered intent1")
+    elif intent == "intent2":
+        response_handler.trigger_event("intent_trigger",{})
+    elif intent == "trigintent":
+        response_handler.generic_response("I have been triggered by intent2")
+    return jsonify(response_handler.create_final_response())
