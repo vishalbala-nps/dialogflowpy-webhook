@@ -56,14 +56,14 @@ class response_handler():
         self.triglangcode = langcode
         self.eventavail = True
     #Generic Responses
-    def generic_response(self,speech):
+    def simple_response(self,speech):
         """
         A Generic Text to be displayed or told to the user.
 
         :param speech: The Text to be displayed or said to the user
         :type speech: str
 
-        .. note:: ``generic_response`` works on all platforms including Google Assistant. However, it is recommended to use ``google_assistant_response`` for Google Assistant and ``generic_rich_text_response`` for text responses on other platforms.
+        .. note:: ``simple_response`` works on all platforms including Google Assistant. However, it is recommended to use ``google_assistant_response`` for Google Assistant and ``generic_rich_text_response`` for text responses on other platforms.
         """
         self.ftext = speech
         self.fulfiltextavail = True

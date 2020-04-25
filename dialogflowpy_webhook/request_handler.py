@@ -69,6 +69,9 @@ class request_handler():
     def get_action(self):
         """
         Returns the Action Name Specified for the Intent
+
+        :return: Action Name
+        :rtype: str
         """
         try:
             return self.resjson["queryResult"]["action"]
