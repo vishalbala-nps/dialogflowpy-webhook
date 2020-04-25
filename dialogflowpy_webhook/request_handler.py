@@ -8,11 +8,11 @@ class request_handler():
         self.resjson = dialogflowRequestJson
     def get_intent(self):
         """
-        Returns the Intent JSON which triggered the Webhook
+        Returns the Intent Dictionary which triggered the Webhook
 
-        :raises TypeError: This Error is Raised if the Intent JSON can't be retived if the Request JSON is Malformed
+        :raises TypeError: This Error is Raised if the Intent Dictionary can't be retived if the Request JSON is Malformed
         :return: Intent Object
-        :rtype: JSON
+        :rtype: dict
         """
         try:
             return self.resjson["queryResult"]["intent"]
@@ -44,10 +44,10 @@ class request_handler():
             raise TypeError("Malformed Request JSON: Failed to find Intent Display Name")
     def get_parameters(self):
         """
-        Returns a JSON of filled Parameter Values
+        Returns a Dictionary of filled Parameter Values
 
         :return: Parameter Object
-        :rtype: JSON
+        :rtype: dict
         """
         try:
             return self.resjson["queryResult"]["parameters"]
@@ -88,13 +88,13 @@ class request_handler():
             raise TypeError("Malformed Request JSON: Failed to find Session ID")
     def get_context_by_name(self,contextName):
         """
-        Returns a Context JSON by Context Name
+        Returns a Context Dictionary by Context Name
 
         :param contextName: The Context Name to retrive the Context JSON
         :type contextName: str
         :raises LookupError: This Error is Raised if The Context is not found
         :return: Context Object
-        :rtype: JSON
+        :rtype: dict
         """
         fres = {}
         for i in self.resjson["queryResult"]["outputContexts"]:
@@ -108,11 +108,11 @@ class request_handler():
     def get_capabilities(self):
         """
         Returns a list Google Assistant Capabilities for a particular surface (eg. Smart Display, Mobile Phone, Chromebook etc.) from where the bot is accessed.
-
-        .. note:: This Feature is specific only for Google Assistant. This will return an empty list if the bot is accessed from platforms which are not Google Assistant
         
         :return: Capabilities List
         :rtype: list
+
+        .. note:: This Feature is specific only for Google Assistant. This will return an empty list if the bot is accessed from platforms which are not Google Assistant
         """
         try:
             retjson = []
@@ -126,7 +126,7 @@ class request_handler():
         Returns the Platform Specific Payload from where the request originated
 
         :return: Payload Object
-        :rtype: JSON
+        :rtype: dict
         """
         try:
             return self.resjson["originalDetectIntentRequest"]["payload"]

@@ -41,14 +41,14 @@ class response_handler():
         """
         Triggers a Dialogflow Event
 
-        .. note:: When the response contains event, other things are ignored (except Contexts)
-
         :param event: The Name of the Event to Trigger
         :type event: str
         :param params: The Dictionary of Parameters
         :type params: dict
         :param langcode: The Language Code of the Agent, defaults to "en-US"
         :type langcode: str, optional
+
+        .. note:: When the response contains event, other things are ignored (except Contexts)
         """
         self.trigeventname = event
         self.trigeventparams = params
@@ -59,10 +59,10 @@ class response_handler():
         """
         A Generic Text to be displayed or told to the user.
 
-        .. note:: ``generic_response`` works on all platforms including Google Assistant. However, it is recommended to use ``google_assistant_response`` for Google Assistant and ``generic_rich_text_response`` for text responses on other platforms.
-
         :param speech: The Text to be displayed or said to the user
         :type speech: str
+
+        .. note:: ``generic_response`` works on all platforms including Google Assistant. However, it is recommended to use ``google_assistant_response`` for Google Assistant and ``generic_rich_text_response`` for text responses on other platforms.
         """
         self.ftext = speech
         self.fulfiltextavail = True
@@ -283,7 +283,7 @@ class response_handler():
         :type cellList: list
         :param addDivider: Specifies if a divider should be added after the row
         :type addDivider: bool
-        :raises AttributeError: This Error is raised if a header row is added before calling ``google_assistant_new_table``
+        :raises AttributeError: This Error is raised if a row is added before calling ``google_assistant_new_table``
         """
         try:
             tablelist = []
