@@ -20,6 +20,7 @@ class response_handler():
         self.fulfiltextavail = False
         self.eventavail = False
         self.contextavail = False
+        self.gcardadded = False
     #Context
     def add_context(self,sessionID,contextName,lifespan=0,params={}):
         """
@@ -103,12 +104,16 @@ class response_handler():
         :type btntitle: str
         :param btnlink: The link to redirect to on click
         :type btnlink: str
+        :raises AttributeError: This Error is Raised if a new button is added before calling ``generic_card``
         """
-        try:
-            self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
-        except:
-            self.genericmessages[self.gencardindex]["card"]["buttons"] = []
-            self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
+        if self.gencardindex == -1:
+            raise AttributeError("generic_card is not created")
+        else:
+            try:
+                self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
+            except:
+                self.genericmessages[self.gencardindex]["card"]["buttons"] = []
+                self.genericmessages[self.gencardindex]["card"]["buttons"].append({"text":btntitle,"postback":btnlink})
     def generic_add_suggestions(self,suggestionList,**kwargs):
         """
         Adds Suggestion Chips/Quick Replies to be displayed. 
@@ -176,7 +181,12 @@ class response_handler():
     
         :param imageDisplayOption: The Display options for the image (`Click here For a list of image display options <https://developers.google.com/assistant/conversational/webhook/reference/rest/Shared.Types/ImageDisplayOptions>`_)
         :type imageDisplayOption: str, optional
+
+        :raises AttributeError: This error is raised if more than one card is added
         """
+        if self.gcardadded == True:
+            raise AttributeError("You can have only one Google Assistant Card. More than one cards will lead to an error in Google Assistant")
+        self.gcardadded = True
         gcardtitle = title
         gcardsub = kwargs.get("subtitle","")
         gcardftext = kwargs.get("formatted_text","")
@@ -198,7 +208,11 @@ class response_handler():
     def google_assistant_new_carousel(self):
         """
         Creates a New Google Assistant Carousel
+
+        :raises AttributeError: This error is raised if more than one Carousel is added
         """
+        if self.gcarouselindex != -1:
+            raise AttributeError("You can have only one Google Assistant Carousel. More than one Carousels will lead to an error in Google Assistant")
         self.googleijson.append({"carouselBrowse":{"items":[]}})
         self.gcarouselindex = len(self.googleijson)-1
     def google_assistant_carousel_add_item(self,title,url,imageURL,imgalt,description="",footer=""):
@@ -247,7 +261,11 @@ class response_handler():
 
         :param imageAlt: The Alt text of the image to be displayed on the table card
         :type imageAlt: str, optional
+
+        :raises AttributeError: This error is raised if more than one Table is added
         """
+        if self.gtableindex != -1:
+            raise AttributeError("You can have only one Google Assistant Table. More than one Tables will lead to an error in Google Assistant")
         imgurl = kwargs.get("imageURL","")
         imgalt = kwargs.get("imageAlt","")
         tabtitle = kwargs.get("title","")
