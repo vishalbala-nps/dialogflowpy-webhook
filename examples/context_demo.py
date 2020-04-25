@@ -13,8 +13,8 @@ def main():
     sesid = request_handler.get_session_id() #Session ID is required for saving data to a context
 
     if intent == "askcontext":
-        response_handler.generic_response("Hello. I am saving data to a contect")
+        response_handler.simple_response("Hello. I am saving data to a contect")
         response_handler.add_context(sesid,"mycontext",lifespan=5,params={"param1":"value1"})
     elif intent == "getcontext":
         cntxt = request_handler.get_context_by_name("mycontext")
-        response_handler.generic_response("Here is the data from the context "+cntxt["parameters"]["param1"])
+        response_handler.simple_response("Here is the data from the context "+cntxt["parameters"]["param1"])
