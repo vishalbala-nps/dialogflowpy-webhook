@@ -8,5 +8,12 @@ setup(
     author_email="vishal.bala.test@gmail.com",
     license="MIT",
     packages=find_packages(),
-    python_requires=">=3"
+    python_requires=">=3",
+    keywords=["dialogflow","flask","django","fulfillment","webhook","api","python"],
+    classifiers=[
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Build Tools',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3'
+    ]
 )
