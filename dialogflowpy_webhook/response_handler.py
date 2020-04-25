@@ -146,6 +146,8 @@ class response_handler():
         :type displayText: str, optional
         :param endConversation: Specifies wheather this response should end the conversation or not
         :type endConversation: bool
+
+        .. note:: This MUST Before any Google Assistant Rich Response. Failing to do so will result in an error in Google Assistant
         """
         gstts = speech
         gsdisplay = kwargs.get("displayText", "")
