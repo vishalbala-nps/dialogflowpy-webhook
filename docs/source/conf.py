@@ -18,7 +18,7 @@ autodoc_member_order = 'bysource'
 
 # -- Project information -----------------------------------------------------
 
-project = 'dialogflowpy'
+project = 'dialogflowpy-webhook'
 copyright = '2020, Vishal Balasubramanian'
 author = 'Vishal Balasubramanian'
 

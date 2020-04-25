@@ -7,9 +7,9 @@ Installation
 #############
 .. code-block:: shell
 
-   pip3 install dialogflowpy flask
+   pip3 install dialogflowpy-webhook flask
 
-.. note:: For this example, we are using Flask. You can use any Python web framework (like Django, Bottle etc). Installing Flask is not a must for dialogflowpy to work
+.. note:: For this example, we are using Flask. You can use any Python web framework (like Django, Bottle etc). Installing Flask is not a must for dialogflowpy-webhook to work
 
 Webhook Server Setup
 #####################
@@ -22,12 +22,12 @@ Create a new file (bot.py and paste the code into it)
 .. code-block:: python
 
    from flask import Flask,request
-   import dialogflowpy
+   import dialogflowpy_webhook
    app = Flask(__name__)
 
    app.route("/fulfillment")
    def fulfillment():
-      response_handler = dialogflowpy.response_handler()
+      response_handler = dialogflowpy_webhook.response_handler()
       response_handler.generic_response("Hello from Python!")
       return response_handler.create_final_response()
 
