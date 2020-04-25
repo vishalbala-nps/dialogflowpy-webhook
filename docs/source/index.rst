@@ -30,6 +30,7 @@ Resources
 
 * Head over to the Getting Started section to create a Dialogflow bot with dialogflowpy_webhook
 * Take a look at the Module Reference which contains all the modules available in dialogflowpy_webhook
+* Take a look at the examples `here <https://github.com/vishalbala-nps/dialogflowpy-webhook/tree/master/examples>`_ which contain some use cases for many functions
 
 Table of Contents
 ##################

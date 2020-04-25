@@ -50,4 +50,6 @@ For this example, we will be testing using Actions on Google.
 
 Extending further
 ##################
-Now that we have created a basic bot, you can extend it further. Take a look at the Module Reference which contains various functions which can be used to extend your bot
+Now that we have created a basic bot, you can extend it further. You can:
+* Take a look at the Module Reference which contains various functions which can be used to extend your bot
+* Take a look at the examples `here <https://github.com/vishalbala-nps/dialogflowpy-webhook/tree/master/examples>`_ which contain some use cases for many functions
