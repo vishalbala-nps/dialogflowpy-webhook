@@ -1,3 +1,5 @@
+import warnings
+
 class response_handler():
     """
     The Class handles the creation of Dialogflow Responses
@@ -183,11 +185,10 @@ class response_handler():
     
         :param imageDisplayOption: The Display options for the image (`Click here For a list of image display options <https://developers.google.com/assistant/conversational/webhook/reference/rest/Shared.Types/ImageDisplayOptions>`_)
         :type imageDisplayOption: str, optional
-
-        :raises AttributeError: This error is raised if more than one card is added
         """
         if self.gcardadded == True:
-            raise AttributeError("You can have only one Google Assistant Card. More than one cards will lead to an error in Google Assistant")
+            warnings.warn("You can have only one Google Assistant Card. More than one cards will lead to an error in Google Assistant")
+            return 
         self.gcardadded = True
         gcardtitle = title
         gcardsub = kwargs.get("subtitle","")
@@ -210,11 +211,10 @@ class response_handler():
     def google_assistant_new_carousel(self):
         """
         Creates a New Google Assistant Carousel
-
-        :raises AttributeError: This error is raised if more than one Carousel is added
         """
         if self.gcarouselindex != -1:
-            raise AttributeError("You can have only one Google Assistant Carousel. More than one Carousels will lead to an error in Google Assistant")
+            warnings.warn("You can have only one Google Assistant Carousel. More than one Carousels will lead to an error in Google Assistant")
+            return
         self.googleijson.append({"carouselBrowse":{"items":[]}})
         self.gcarouselindex = len(self.googleijson)-1
     def google_assistant_carousel_add_item(self,title,url,imageURL,imgalt,description="",footer=""):
@@ -263,11 +263,10 @@ class response_handler():
 
         :param imageAlt: The Alt text of the image to be displayed on the table card
         :type imageAlt: str, optional
-
-        :raises AttributeError: This error is raised if more than one Table is added
         """
         if self.gtableindex != -1:
-            raise AttributeError("You can have only one Google Assistant Table. More than one Tables will lead to an error in Google Assistant")
+            warnings.warn("You can have only one Google Assistant Table. More than one Tables will lead to an error in Google Assistant")
+            return
         imgurl = kwargs.get("imageURL","")
         imgalt = kwargs.get("imageAlt","")
         tabtitle = kwargs.get("title","")
@@ -371,6 +370,8 @@ class response_handler():
             self.fulfiljson["fulfillmentMessages"] = self.genericmessages
         #Google Assistant Responses
         if self.googleijson != []:
+            if self.googleijson[0].keys()[0] != "simpleResponse":
+                warnings.warn("google_assistant_response() should have been called before adding a Google Assistant Card,Carousel,Table etc. This is a limitation of Google Assistant where the first response must be a simple text")
             self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":self.googleijson}}}
         if self.gsuglist != []:
             try:
