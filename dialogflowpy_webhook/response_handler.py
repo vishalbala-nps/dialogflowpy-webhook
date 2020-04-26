@@ -370,7 +370,7 @@ class response_handler():
             self.fulfiljson["fulfillmentMessages"] = self.genericmessages
         #Google Assistant Responses
         if self.googleijson != []:
-            if self.googleijson[0].keys()[0] != "simpleResponse":
+            if list(self.googleijson[0].keys())[0] != "simpleResponse":
                 warnings.warn("google_assistant_response() should have been called before adding a Google Assistant Card,Carousel,Table etc. This is a limitation of Google Assistant where the first response must be a simple text")
             self.fulfiljson["payload"] = {"google":{"expectUserResponse": expectres,"richResponse":{"items":self.googleijson}}}
         if self.gsuglist != []:
