@@ -1,7 +1,9 @@
 ********************************
 Welcome to dialogflowpy-webhook
 ********************************
-dialogflowpy-webhook is a Python module for parsing and creating `Dialogflow <http://www.dialogflow.com/>`_ Webhook Requests and Responses. dialogflowpy-webhook serves as an SDK for creating Dialogflow bots which can be used with platforms like Actions on Google, Telegram, Facebook Messenger etc.
+A Python module for parsing and creating Requests and Responses of Dialogflow Fulfillment Library. The `Dialogflow Fulfillment Library <https://cloud.google.com/dialogflow/docs/fulfillment-overview>`_ allows you to connect natural language understanding and processing to your own system. Using Fulfillment, you can surface commands and information from your services to your users through a natural conversational interface.
+
+This dialogflowpy-webhook module is intended to help build Python Dialogflow Fulfillment for multiple `integrations <https://cloud.google.com/dialogflow/docs/integrations/>`_ including Google Assistant, Facebook and Telegram. It is expected to work for Slack and Line as well.
 
 Features
 #########
@@ -31,6 +33,10 @@ Resources
 * Head over to the Getting Started section to create a Dialogflow bot with dialogflowpy_webhook
 * Take a look at the Module Reference which contains all the modules available in dialogflowpy_webhook
 * Take a look at the examples `here <https://github.com/vishalbala-nps/dialogflowpy-webhook/tree/master/examples>`_ which contain some use cases for many functions
+
+Reporting Bugs
+###############
+In case of any problems or suggestions with this module, feel free to open a `Github Issue <https://github.com/vishalbala-nps/dialogflowpy-webhook/issues>`_
 
 Table of Contents
 ##################
