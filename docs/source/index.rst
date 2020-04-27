@@ -21,6 +21,9 @@ Welcome to dialogflowpy-webhook
    :target: https://github.com/vishalbala-nps/dialogflowpy-webhook/
    :alt: license
 
+.. image:: https://img.shields.io/pypi/dd/dialogflowpy-webhook
+   :alt: PyPI - Downloads
+
 A Python module for parsing and creating Requests and Responses of Dialogflow Fulfillment Library. The `Dialogflow Fulfillment Library <https://cloud.google.com/dialogflow/docs/fulfillment-overview>`_ allows you to connect natural language understanding and processing to your own system. Using Fulfillment, you can surface commands and information from your services to your users through a natural conversational interface.
 
 This dialogflowpy-webhook module is intended to help build Python Dialogflow Fulfillment for multiple `integrations <https://cloud.google.com/dialogflow/docs/integrations/>`_ including Google Assistant, Facebook and Telegram. It is expected to work for Slack and Line as well.

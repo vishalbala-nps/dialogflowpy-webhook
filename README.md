@@ -4,6 +4,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/vishalbala-nps/dialogflowpy-webhook)](https://github.com/vishalbala-nps/dialogflowpy-webhook/issues)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dialogflowpy-webhook)
 [![GitHub](https://img.shields.io/github/license/vishalbala-nps/dialogflowpy-webhook)](https://github.com/vishalbala-nps/dialogflowpy-webhook/)
+![PyPI - Downloads](https://img.shields.io/pypi/dd/dialogflowpy-webhook)
 
 A Python module for parsing and creating Requests and Responses of Dialogflow Fulfillment Library. The [Dialogflow Fulfillment Library](https://cloud.google.com/dialogflow/docs/fulfillment-overview) allows you to connect natural language understanding and processing to your own system. Using Fulfillment, you can surface commands and information from your services to your users through a natural conversational interface.
 
