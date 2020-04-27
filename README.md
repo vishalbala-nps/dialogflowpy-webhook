@@ -1,6 +1,6 @@
 # dialogflowpy-webhook
 [![Documentation Status](https://readthedocs.org/projects/dialogflowpy-webhook/badge/?version=latest)](https://dialogflowpy-webhook.readthedocs.io/en/latest/?badge=latest)
-[![PyPI](https://img.shields.io/pypi/v/dialogflowpy-webhook)](https://pypi.org/project/dialogflow-fulfillment/)
+[![PyPI](https://img.shields.io/pypi/v/dialogflowpy-webhook)](https://pypi.org/project/dialogflowpy-webhook/)
 [![GitHub issues](https://img.shields.io/github/issues/vishalbala-nps/dialogflowpy-webhook)](https://github.com/vishalbala-nps/dialogflowpy-webhook/issues)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dialogflowpy-webhook)
 [![GitHub](https://img.shields.io/github/license/vishalbala-nps/dialogflowpy-webhook)](https://github.com/vishalbala-nps/dialogflowpy-webhook/)
